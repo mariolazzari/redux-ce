@@ -1,12 +1,20 @@
-const { createStore } = require("redux");
+const { createStore, bindActionCreators } = require("redux");
 
 const CAKE_ORDERED = "CAKE_ORDERED";
+const CAKE_RESTOCKED = "CAKE_RESTOCKED";
 
 // action creator
 function orderCake() {
   return {
     type: CAKE_ORDERED,
     quantity: 1,
+  };
+}
+
+function restockCake(quantity = 1) {
+  return {
+    type: CAKE_RESTOCKED,
+    quantity,
   };
 }
 
@@ -22,6 +30,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         cakes: state.cakes - action.quantity,
+      };
+
+    case CAKE_RESTOCKED:
+      return {
+        ...state,
+        cakes: state.cakes + action.quantity,
       };
 
     default:
@@ -44,6 +58,13 @@ const unsubscribe = store.subscribe(() => {
 store.dispatch(orderCake());
 store.dispatch(orderCake());
 store.dispatch(orderCake());
+store.dispatch(restockCake(3));
+
+// bind actions
+const actions = bindActionCreators({ orderCake, restockCake }, store.dispatch);
+actions.orderCake();
+actions.orderCake();
+actions.restockCake(2);
 
 // unsubscribe
 unsubscribe();
