@@ -1,4 +1,12 @@
-const { createStore, bindActionCreators, combineReducers } = require("redux");
+const {
+  createStore,
+  bindActionCreators,
+  combineReducers,
+  applyMiddleware,
+} = require("redux");
+const { createLogger } = require("redux-logger");
+
+const logger = createLogger();
 
 const CAKE_ORDERED = "CAKE_ORDERED";
 const CAKE_RESTOCKED = "CAKE_RESTOCKED";
@@ -92,14 +100,14 @@ const rootReducer = combineReducers({
 });
 
 // redux store
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger));
 
 // state
 console.log("Initial state:", store.getState());
 
 // subscribe event
 const unsubscribe = store.subscribe(() => {
-  console.log("State updated:", store.getState());
+  //console.log("State updated:", store.getState());
 });
 
 // dispatch action
